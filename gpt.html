@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Input</title>
+<style>
+    body {
+        background-color: #212121; 
+        color: white; 
+        font-size: 14px; 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        margin: 0;
+        padding: 0;
+    }
+    input, .container, .left-container p {
+        color: white;
+        font-size: 16px; 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    }
+    input {
+        position: relative; 
+    }
+    input::after {
+        content: "";
+        position: absolute;
+        right: 10px; 
+        bottom: 50%;
+        transform: translateY(50%);
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid white;
+        visibility: hidden;
+    }
+    input:focus::after {
+        visibility: visible; 
+    }
+    .container {
+        width: 60%;
+        position: absolute;
+        bottom: 0.3in; 
+        left: calc(50% + 0.8in); 
+        transform: translateX(-50%);
+        text-align: center;
+        margin-left: 2%; 
+    }
+    .text-input {
+        width: calc(100% - 20px); 
+        height: 50px; 
+        padding: 10px 30px 10px 10px; 
+        border: 2px solid #2f2f2f;
+        background-color: #212121; 
+        box-sizing: border-box;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        position: relative;
+    }
+    .text-input::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: -15px;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        border-right: 5px solid white; 
+    }
+    .left-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 20%;
+        background-color: black;
+        border-right: 2px solid #2f2f2f;
+        box-sizing: border-box;
+        padding: 10px; 
+    }
+    .left-container p {
+        margin: 0 0 0.3in;
+        font-size: 16px; 
+        color: white; 
+    }
+
+
+    .product-name {
+        position: absolute;
+        top: 10px;
+        left: 280px;
+        font-size: 28px;
+        font-weight: bold;
+        color: white;
+    }
+
+    .left-container::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .left-container::-webkit-scrollbar-thumb {
+        background-color: white; 
+        border-radius: 5px; 
+    }
+
+    .left-container::-webkit-scrollbar-track {
+        background-color: #212121; 
+    }
+    .logo-container {
+        position: absolute;
+        top: 50%;
+        left: 60%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+</head>
+<body>
+<div class="logo-container">
+    <img src="{{ url_for('static', filename='GPT_LOGO.png') }}" alt="Logo">
+</div>
+<div class="left-container" id="leftContainer">
+    <img src="{{ url_for('static', filename='Logo.png') }}" alt="Logo">
+</div>
+<div class="container">
+    <input type="text" class="text-input" id="textInput" placeholder="Message">
+</div>
+<div class="product-name">FinGPT-1</div>
+<script>
+    const inputField = document.getElementById('textInput');
+    const leftContainer = document.getElementById('leftContainer');
+
+    inputField.addEventListener('input', function() {
+        const inputValue = this.value.trim();
+        if (inputValue === '') {
+            this.nextElementSibling.style.visibility = 'hidden';
+        } else {
+            this.nextElementSibling.style.visibility = 'visible';
+        }
+    });
+
+    inputField.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            const inputValue = this.value.trim();
+            if (inputValue !== '') {
+                const paragraph = document.createElement('p');
+                const timestamp = getTimestamp();
+                paragraph.textContent = `${timestamp} - ${inputValue}`;
+                leftContainer.appendChild(paragraph);
+                this.value = '';
+                leftContainer.scrollTop = leftContainer.scrollHeight;
+            }
+        }
+    });
+    function getTimestamp() {
+        const now = new Date();
+        const inputDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const today = inputDate.getTime();
+        const yesterday = today - (24 * 60 * 60 * 1000);
+        const inputTime = inputDate.getTime();
+
+        if (inputTime === today) {
+            return 'Today';
+        } else if (inputTime === yesterday) {
+            return 'Yesterday';
+        } else {
+            return 'Earlier';
+        }
+    }
+</script>
+</body>
+</html>

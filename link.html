@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>process</title>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: black;
+        color: white;
+    }
+    
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    
+    .box {
+        background-color: rgba(255, 255, 255, 0.2);
+        padding: 40px;
+        text-align: center;
+        border-radius: 20px;
+        width: 400px;
+        height: 250px;
+        margin: 0 20px;
+    }
+    
+    .box img {
+        max-width: 100%;
+        max-height: 100px; 
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+    
+    .box button {
+        background-color: #007bff;
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
+
+
+</head>
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5 mr-2">
+                <div class="box">
+                    <h3>Data Visualization</h3>
+                    <div class="image-container">
+                        <img src="{{ url_for('static', filename='dv.png') }}" alt="Image 1">
+                    </div>
+                    <form action="/start-app" method="post">
+                        <button type="submit" class="select-btn">Start</button>
+                    </form>
+                </div>
+            </div>
+        <div class="col-md-5 ml-2">
+            <div class="box">
+                <h3>Generate Insights</h3>
+                <div class="image-container">
+                    <img src="{{ url_for('static', filename='gi.png') }}" alt="Image 2">
+                </div>
+                <form action="/move_to_gpt" method="GET">
+                    <button type="submit" class="select-btn">Start</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

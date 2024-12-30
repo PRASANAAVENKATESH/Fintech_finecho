@@ -1,22 +1,18 @@
 import os
-import subprocess
-import signal
-from flask import Flask, redirect, url_for, render_template, request, session, jsonify
-import google.generativeai as genai
+import io
+import zipfile
+from Flask import Flask, redirect, url_for, render_template, request, session
+import requests
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
+import signal
 import gdown
-import zipfile
+import subprocess
 
 app = Flask(__name__)
-app.secret_key = b'5#y2L"F4Q8z\n\xec]/'
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 UPLOAD_FOLDER = 'uploads'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure uploads folder exists
-
-# Configure Gemini AI
-genai.configure(api_key="AIzaSyAK00a4Tm_xzACcWwGa5Nk7NUcCzVDPm1w")
-model = genai.GenerativeModel('gemini-pro')
 
 def cleanup_on_exit(signum, frame):
     print("Received termination signal. Cleaning up...")
@@ -45,6 +41,8 @@ def cleanup_on_exit(signum, frame):
     print("Cleanup successful")
     exit(0)
 
+        
+
 def start_llmdata_if_data_present():
     csv_files = [f for f in os.listdir(UPLOAD_FOLDER) if f.endswith('.csv')]
     if csv_files:
@@ -61,6 +59,7 @@ def index():
 def login():
     username = request.form['username']
     password = request.form['password']
+
 
     if username == 'admin' and password == '1234':
         return redirect(url_for('data'))
@@ -80,11 +79,11 @@ def upload():
                 file_path = os.path.join(UPLOAD_FOLDER, file.filename)
                 file.save(file_path)
                 if os.path.exists(file_path):
-                    start_llmdata_if_data_present()
+                    start_llmdata_if_data_present()  # Check for CSV files after file upload
                     return redirect(url_for('success'))
     return render_template('local.html')
 
-# Cloud file handling classes
+# cloud 
 class DataIngestionConfig:
     def __init__(self, source_URL: str, local_data_file: str, unzip_dir: str):
         self.source_URL = source_URL
@@ -110,7 +109,8 @@ class DataIngestion:
 
         except Exception as e:
             raise e
-
+        
+    
     def extract_zip_file(self) -> None:
         unzip_path = self.config.unzip_dir
         os.makedirs(unzip_path, exist_ok=True)
@@ -118,7 +118,7 @@ class DataIngestion:
             zip_ref.extractall(unzip_path)
 
 @app.route('/cloud', methods=['GET', 'POST'])
-def cloud():
+def local():
     if request.method == 'POST':
         drive_link = request.form.get('drive_link')
         config = DataIngestionConfig(
@@ -133,13 +133,13 @@ def cloud():
         downloaded_file_path = os.path.join("uploads", "downloaded_file.zip")
         if os.path.exists(downloaded_file_path):
             print("File exists, redirecting to link.html")
-            session['file_downloaded'] = True
-            start_llmdata_if_data_present()
+            session['file_downloaded'] = True 
+            start_llmdata_if_data_present()  # Start llmdata.py if data is present
             return redirect(url_for('link'))
         else:
             print("File does not exist, something went wrong")
-            session['file_downloaded'] = False
-            return redirect(url_for('cloud'))
+            session['file_downloaded'] = False 
+            return redirect(url_for('cloud'))  
 
     return render_template('cloud.html')
 
@@ -148,11 +148,11 @@ def link():
     if session.get('file_downloaded'):
         return render_template('link.html')
     else:
-        return redirect(url_for('cloud'))
+        return redirect(url_for('cloud'))  
 
 @app.route('/start-app', methods=['POST'])
 def start_app():
-    subprocess.Popen(["streamlit", "run", "app.py"])
+    streamlit_process = subprocess.Popen(["streamlit", "run", "app.py"])
     return redirect(url_for('success'))
 
 @app.route('/success')
@@ -163,26 +163,7 @@ def success():
 def move_to_gpt():
     return render_template('gpt.html')
 
-@app.route('/process_input', methods=['POST'])
-def process_input():
-    user_input = request.json.get('input')
-
-    if not user_input:
-        return jsonify({"error": "No input provided"}), 400
-
-    try:
-        # Use Gemini AI for processing input
-        response = model.generate_content(user_input)
-        
-        # Extract the response from Gemini
-        gemini_output = response.text
-
-        return jsonify({"output": gemini_output})
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
 if __name__ == '__main__':
-    signal.signal(signal.SIGINT, cleanup_on_exit)
-    start_llmdata_if_data_present()
+    signal.signal(signal.SIGINT, cleanup_on_exit)  
+    start_llmdata_if_data_present()  # Start llmdata.py if data is already present when the server starts
     app.run(debug=True)

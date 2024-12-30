@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis</title>
+    <!-- Include Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            padding: 20px;
+        }
+        .container {
+            margin: 0 auto;
+            max-width: 1200px; /* Increased max-width */
+        }
+        .visualization {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analysis Report</h1>
+        <h2>File: {{ filename }}</h2>
+
+        <h3>Data before EDA</h3>
+        <table>
+            <thead>
+                <tr>
+                    {% for column in df_before_eda.columns %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, row in df_before_eda.iterrows() %}
+                    <tr>
+                        {% for value in row %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Data after EDA</h3>
+        <table>
+            <thead>
+                <tr>
+                    {% for column in df_after_eda.columns %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, row in df_after_eda.iterrows() %}
+                    <tr>
+                        {% for value in row %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Most Correlated Features</h3>
+        <ul>
+            {% for feature in most_correlated_features %}
+                <li>{{ feature }}</li>
+            {% endfor %}
+        </ul>
+
+        <h3>Visualizations</h3>
+        <div class="visualization">
+            {% for plot in plots %}
+                <div id="plot_{{ loop.index }}" style="height: 500px;"></div>
+                <script>
+                    var plot_{{ loop.index }}_data = {{ plot | safe }};
+                    Plotly.newPlot('plot_{{ loop.index }}', plot_{{ loop.index }}_data);
+                </script>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

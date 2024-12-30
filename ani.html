@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Processing</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    .animation-container {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: black;
+    }
+
+    .animation-text {
+      font-size: 50px;
+      color: white;
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .step {
+      display: block;
+      opacity: 0;
+      margin-bottom: 20px;
+    }
+
+    .step.active {
+      opacity: 1;
+      animation: revealStep 1s forwards, hideStep 5s forwards;
+    }
+
+    @keyframes revealStep {
+      0% {
+        transform: translateY(-100%);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes hideStep {
+      0% {
+        opacity: 1;
+      }
+      80% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="animation-container">
+    <div class="animation-text">
+      <span class="step" id="step1">1. Data Stored</span>
+      <span class="step" id="step2">2. Data Cleaning</span>
+      <span class="step" id="step3">3. Feature Extraction</span>
+      <span class="step" id="step4">4. Data is Ready</span>
+      <span class="step" id="step5">5. Data Visualization</span>
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+      var steps = document.querySelectorAll(".step");
+      var index = 0;
+
+      function revealNextStep() {
+        if (index < steps.length) {
+          steps[index].classList.add("active");
+          index++;
+        }
+      }
+
+      function hideCurrentStep() {
+        if (index > 0) {
+          steps[index - 1].classList.remove("active");
+        }
+      }
+
+      function revealSteps() {
+        revealNextStep();
+        setInterval(function() {
+          hideCurrentStep();
+          revealNextStep();
+        }, 6000);
+      }
+      var animationText = document.querySelector(".animation-text");
+      animationText.style.display = "block";
+      setTimeout(revealSteps, 1000);
+    });
+  </script>
+</body>
+</html>

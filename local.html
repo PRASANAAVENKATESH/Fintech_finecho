@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Upload</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #000000, #111111);
+            color: #fff;
+            font-family: Arial, sans-serif;
+            padding-top: 50px;
+        }
+
+        .container {
+            max-width: 800px;
+        }
+
+        .upload-section {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .submit-button {
+            margin-top: 20px;
+        }
+
+        .vertical-line {
+            border-left: 20px solid #fff;
+            height: 100%;
+            width: 30px; 
+            background-color: #fff; 
+        }
+
+        .upload-wording {
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="upload-wording">Visualize Your Data </h2>
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-5">
+                <div class="upload-section">
+                        <form action="/local" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="localFile" class="form-label">Select File from Local Drive:</label>
+                            <input type="file" class="form-control" id="localFile" name="localFile">
+                        </div>
+                       <button type="submit"  id ="local" class="btn btn-primary submit-button">Submit</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="vertical-line"></div>
+            </div>
+</div>
+</div>
+</body>
+</html>
