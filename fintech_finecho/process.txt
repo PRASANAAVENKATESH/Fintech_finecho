@@ -1,5 +1,0 @@
-1.conda activate Env
-2.pip install -r requirment.txt
-3.python main.py
-
-
